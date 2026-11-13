@@ -12,7 +12,7 @@ All notable changes to this project are documented here. The format follows
 
 - `lint` command (also the default) with 18 rules: V001-V004 (vagueness), S001-S004 (scoping and load cost), F001-F006 (format validity), C001-C003 (consistency), E001 (enforceability).
 - Discovery for Claude Code, AGENTS.md, Cursor, Copilot, Windsurf, Cline, Roo and Gemini rules files, `@path` imports (one level) and `.gitignore`.
-- Output formats: text, json, sarif, github. Documented exit codes.
+- Output formats: text, json, sarif, github. Documented exit codes; unreadable rules files, imports, `.gitignore` files or directories are reported with their path and exit 3.
 - `.kogentic-rules-lint.yaml` config and inline `rules-lint-disable` comments.
 - `explain`, `init`, `version`.
 - `harden` with templates for path deny-list, command deny-list, secret-file deny, must-have-test and run-before-commit, as Claude Code hooks, Cursor hooks, rule files or CI test stubs. Prints a diff; writes only with `--write`.

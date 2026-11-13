@@ -28,6 +28,9 @@ type Result struct {
 	Findings       []core.Finding
 	Rules          []*core.Rule // rules that ran
 	AlwaysOnTokens int
+	// ReadErrors lists paths that could not be read. The CLI exits 3 when
+	// it is not empty, after printing the findings it has.
+	ReadErrors []discover.ReadError
 }
 
 // Counts returns the number of findings per severity.
@@ -85,7 +88,7 @@ func Run(opts Options) (*Result, error) {
 		return nil, err
 	}
 	ctx := &core.Context{Root: opts.Root, Files: d.Files, RepoFiles: d.RepoFiles, Budget: cfg.Budget.AlwaysOnTokens}
-	res := &Result{Root: opts.Root, Files: d.Files}
+	res := &Result{Root: opts.Root, Files: d.Files, ReadErrors: d.ReadErrors}
 	for _, f := range d.Files {
 		if f.AlwaysOn {
 			res.AlwaysOnTokens += f.Tokens()

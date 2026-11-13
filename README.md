@@ -147,7 +147,7 @@ Rule IDs are stable: a rule may be retired, but its ID will never be reused for 
 | 0 | No errors (warnings and info allowed, unless `--strict`). |
 | 1 | At least one error-level finding, or a warning with `--strict`. |
 | 2 | Usage problem: bad flag, unknown rule ID, missing path, invalid config, unsupported `harden` request, or a refused `--send-to-kogentic`. |
-| 3 | Runtime failure: I/O error, or `--send-to-kogentic` / `login` failed to reach the server. Findings are still printed. |
+| 3 | Runtime failure: an I/O error (a rules file, import, `.gitignore` or directory that can't be read; each path is printed on stderr and nothing is uploaded), or `--send-to-kogentic` / `login` / `whoami` failed (unreachable server, rejected key, or a redirect). Findings are still printed. |
 
 ## Configuration
 

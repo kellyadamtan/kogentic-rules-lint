@@ -22,6 +22,25 @@ import (
 type Result struct {
 	Files     []*core.File
 	RepoFiles []string
+	// ReadErrors lists paths that could not be read (unreadable rules files,
+	// imports, .gitignore files or directories). Lint results are incomplete
+	// when it is not empty.
+	ReadErrors []ReadError
+}
+
+// ReadError is one path that could not be read.
+type ReadError struct {
+	Path string // slash-separated, relative to the root
+	Err  error
+}
+
+func (e ReadError) Error() string {
+	err := e.Err
+	var pe *fs.PathError
+	if errors.As(err, &pe) {
+		err = pe.Err
+	}
+	return e.Path + ": " + err.Error()
 }
 
 // alwaysSkip are directory names never walked.
@@ -75,21 +94,35 @@ func Discover(root string, extra, ignoreGlobs []string) (*Result, error) {
 		}
 		return false
 	}
+	res := &Result{}
+	readErr := func(rel string, err error) {
+		res.ReadErrors = append(res.ReadErrors, ReadError{Path: rel, Err: err})
+	}
 	loadIgnore := func(relDir, absDir string) {
 		p := filepath.Join(absDir, ".gitignore")
-		if b, err := os.ReadFile(p); err == nil {
+		b, err := os.ReadFile(p)
+		if err == nil {
 			matchers[relDir] = ignore.CompileIgnoreLines(strings.Split(strings.ReplaceAll(string(b), "\r\n", "\n"), "\n")...)
+		} else if !errors.Is(err, fs.ErrNotExist) {
+			readErr(path.Join(relDir, ".gitignore"), err)
 		}
 	}
 
-	res := &Result{}
 	var candidates []string
 	err = filepath.WalkDir(root, func(p string, d fs.DirEntry, werr error) error {
 		if werr != nil {
 			if p == root {
 				return werr
 			}
-			return nil // unreadable entry: skip
+			rel, _ := filepath.Rel(root, p)
+			rel = filepath.ToSlash(rel)
+			// An unreadable directory also failed its .gitignore read just
+			// before; report the directory once.
+			if n := len(res.ReadErrors); n > 0 && res.ReadErrors[n-1].Path == path.Join(rel, ".gitignore") {
+				res.ReadErrors = res.ReadErrors[:n-1]
+			}
+			readErr(rel, werr) // unreadable entry: report, keep walking
+			return nil
 		}
 		rel, _ := filepath.Rel(root, p)
 		rel = filepath.ToSlash(rel)
@@ -129,6 +162,7 @@ func Discover(root string, extra, ignoreGlobs []string) (*Result, error) {
 		}
 		f, err := Load(root, rel, tool, kind)
 		if err != nil {
+			readErr(rel, err)
 			continue
 		}
 		seen[rel] = true
@@ -147,6 +181,8 @@ func Discover(root string, extra, ignoreGlobs []string) (*Result, error) {
 			}
 			nf, err := Load(root, im.Resolved, "claude", core.KindClaudeImport)
 			if err != nil {
+				seen[im.Resolved] = true
+				readErr(im.Resolved, err)
 				continue
 			}
 			nf.ImportedBy = f.Path
@@ -157,6 +193,7 @@ func Discover(root string, extra, ignoreGlobs []string) (*Result, error) {
 	}
 	res.Files = append(res.Files, imported...)
 	sort.SliceStable(res.Files, func(i, j int) bool { return res.Files[i].Path < res.Files[j].Path })
+	sort.SliceStable(res.ReadErrors, func(i, j int) bool { return res.ReadErrors[i].Path < res.ReadErrors[j].Path })
 	return res, nil
 }
 

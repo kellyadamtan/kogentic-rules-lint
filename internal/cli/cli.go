@@ -224,6 +224,15 @@ func (a *app) lint(args []string, o *lintOpts) error {
 	if e > 0 || (o.strict && w > 0) {
 		a.code = ExitFindings
 	}
+	if n := len(res.ReadErrors); n > 0 {
+		for _, re := range res.ReadErrors {
+			fmt.Fprintln(a.err, "error: cannot read", re.Error())
+		}
+		if o.send {
+			fmt.Fprintln(a.err, "Not sent: the report would be incomplete.")
+		}
+		return runtimeErr(fmt.Errorf("%d path(s) could not be read; results are incomplete", n))
+	}
 	if o.send {
 		return a.send(res, root, base, key, o)
 	}
