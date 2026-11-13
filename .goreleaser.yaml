@@ -1,0 +1,66 @@
+# GoReleaser config for kogentic-rules-lint.
+# Release assets only: archives for 5 targets plus checksums.txt (SHA-256).
+# v0.1 ships unsigned binaries: no signing, no notarization, no package
+# managers (no Homebrew, Scoop, npm).
+version: 2
+
+project_name: kogentic-rules-lint
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: kogentic-rules-lint
+    main: ./cmd/kogentic-rules-lint
+    binary: kogentic-rules-lint
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }} -X main.commit={{ .Commit }} -X main.date={{ .CommitDate }}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    targets:
+      - darwin_arm64
+      - darwin_amd64
+      - linux_amd64
+      - linux_arm64
+      - windows_amd64
+
+archives:
+  - id: default
+    ids: [kogentic-rules-lint]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-snapshot+{{ .ShortCommit }}"
+
+changelog:
+  use: git
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: kellyadamtan
+    name: kogentic-rules-lint
+  draft: false
+  prerelease: auto
+  footer: |
+    Binaries are not code-signed in v0.1. See the README section
+    "Unsigned binaries (macOS and Windows)" and verify downloads with checksums.txt.
