@@ -56,11 +56,13 @@ func TestClassify(t *testing.T) {
 	}
 }
 
+const claudeMD = "# R\n\n- Rule one.\n\nSee @docs/shared.md and @docs/missing.md and @~/.claude/me.md\n```\n@docs/in-fence.md\n```\nInline `@docs/code.md` is not an import.\n"
+
 func TestDiscoverGitignoreImportsAndAlwaysOn(t *testing.T) {
 	root := t.TempDir()
 	write(t, root, map[string]string{
 		".gitignore":               "build/\n*.log\n",
-		"CLAUDE.md":                "# R\n\n- Rule one.\n\nSee @docs/shared.md and @docs/missing.md and @~/.claude/me.md\n```\n@docs/in-fence.md\n```\nInline `@docs/code.md` is not an import.\n",
+		"CLAUDE.md":                claudeMD,
 		"docs/shared.md":           "- Shared rule.\n",
 		"docs/in-fence.md":         "x\n",
 		"build/AGENTS.md":          "- ignored by .gitignore\n",
@@ -74,6 +76,8 @@ func TestDiscoverGitignoreImportsAndAlwaysOn(t *testing.T) {
 		".claude/rules/scoped.md":  "---\npaths: [\"src/**\"]\n---\n- scoped\n",
 		".claude/rules/always.md":  "- always\n",
 		"node_modules/x/AGENTS.md": "- never walked\n",
+	})
+	write(t, root, map[string]string{
 		".github/instructions/all.instructions.md": "---\napplyTo: \"**\"\n---\n- all\n",
 		".windsurf/rules/w.md":                     "---\ntrigger: model_decision\n---\n- w\n",
 	})
