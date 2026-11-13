@@ -47,7 +47,7 @@ checksum:
   algorithm: sha256
 
 # One SPDX JSON SBOM per archive, uploaded as a Release asset. Needs syft on
-# PATH (the workflows install a pinned version).
+# PATH (the workflows install a pinned version, checked by SHA-256).
 sboms:
   - id: archives
     artifacts: archive
