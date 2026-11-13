@@ -321,7 +321,10 @@ func (a *app) hardenCmd() *cobra.Command {
 		Short: "Turn a repeated correction into a scoped rule, a hook or a test stub",
 		Long: "harden turns a correction you keep making into something enforced, from templates:\n" +
 			"path deny-list, command deny-list, secret-file deny, file-pattern-must-have-test and\n" +
-			"run-before-commit. It always prints a diff and writes only with --write.",
+			"run-before-commit. It always prints a diff and writes only with --write.\n\n" +
+			"Test stubs (--as test) for path deny-lists and must-have-test compare against\n" +
+			"BASE_REF (default origin/main) and fail if it is missing: in GitHub Actions, check\n" +
+			"out with fetch-depth: 0.",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if as != "" && as != "rule" && as != "hook" && as != "test" {
