@@ -1,0 +1,6 @@
+---
+description: a
+alwaysApply: "yes"
+glob: src/**
+---
+- Rule.

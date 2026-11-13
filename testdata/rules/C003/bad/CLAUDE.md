@@ -1,0 +1,2 @@
+- Use 2 spaces for indentation.
+- Use vitest for tests.

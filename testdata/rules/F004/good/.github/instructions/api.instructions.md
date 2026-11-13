@@ -1,0 +1,4 @@
+---
+applyTo: "src/**"
+---
+- Validate bodies.

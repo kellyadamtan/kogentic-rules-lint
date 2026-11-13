@@ -1,0 +1,5 @@
+---
+description: api
+globs: src/api/**/*.ts
+---
+- Validate input.

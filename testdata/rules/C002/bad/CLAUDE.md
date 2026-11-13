@@ -1,0 +1,2 @@
+- Use pnpm for scripts.
+- Use single quotes.

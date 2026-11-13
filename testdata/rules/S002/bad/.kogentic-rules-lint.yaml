@@ -1,0 +1,3 @@
+version: 1
+budget:
+  always_on_tokens: 50

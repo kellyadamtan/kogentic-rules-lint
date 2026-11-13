@@ -1,0 +1,1 @@
+- Run the linter on changed files before pushing.

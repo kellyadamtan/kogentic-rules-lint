@@ -1,0 +1,5 @@
+---
+description: testing
+alwaysApply: false
+---
+- Use vitest.

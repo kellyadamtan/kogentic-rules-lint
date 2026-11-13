@@ -1,0 +1,5 @@
+- Never edit files in `dist/`.
+- Don't run `rm -rf` anywhere.
+- Never commit .env files.
+- Always run `make test` before committing.
+- Every change to `src/*.go` needs a test.

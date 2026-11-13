@@ -1,0 +1,2 @@
+- Use pnpm, not npm.
+- Use single quotes.

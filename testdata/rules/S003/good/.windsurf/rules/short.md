@@ -1,0 +1,4 @@
+---
+trigger: manual
+---
+- one line

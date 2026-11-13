@@ -1,0 +1,2 @@
+- Prefer descriptive names.
+- Explain the why in commit messages.

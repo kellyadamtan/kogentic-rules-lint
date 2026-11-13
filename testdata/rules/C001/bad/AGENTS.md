@@ -1,0 +1,2 @@
+- Run the full test suite before every commit!
+- Keep pull requests small and focused on one change please.

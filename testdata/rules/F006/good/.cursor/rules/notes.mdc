@@ -1,0 +1,5 @@
+---
+description: PR size guidance
+alwaysApply: false
+---
+- Prefer small PRs.

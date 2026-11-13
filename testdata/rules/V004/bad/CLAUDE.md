@@ -1,0 +1,3 @@
+- Try to keep functions short.
+- Ideally, run the tests.
+- Use the shared logger if possible.

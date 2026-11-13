@@ -1,0 +1,2 @@
+- Keep functions under 40 lines.
+- Run `make test` before you finish.

@@ -1,0 +1,7 @@
+---
+description: tsx rules
+globs: "**/*.tsx"
+alwaysApply: false
+---
+- Components in `*.tsx` files use named exports.
+- Each `*.tsx` file holds one component.

@@ -1,0 +1,5 @@
+---
+applyTo: "**"
+globs: src/**
+---
+- Rule.

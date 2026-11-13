@@ -1,0 +1,3 @@
+- Never use `any` in TypeScript files.
+- Always add a doc comment when you export a function.
+- Never push directly to main unless the user asks.

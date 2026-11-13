@@ -1,0 +1,2 @@
+- Prefer small pull requests with one change each.
+- Name branches `feat/<topic>`.

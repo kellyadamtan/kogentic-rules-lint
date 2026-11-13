@@ -1,0 +1,2 @@
+- Never use any.
+- Always add comments.
