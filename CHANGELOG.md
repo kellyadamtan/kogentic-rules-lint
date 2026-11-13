@@ -15,6 +15,6 @@ All notable changes to this project are documented here. The format follows
 - Output formats: text, json, sarif, github. Documented exit codes; unreadable rules files, imports, `.gitignore` files or directories are reported with their path and exit 3.
 - `.kogentic-rules-lint.yaml` config and inline `rules-lint-disable` comments.
 - `explain`, `init`, `version`.
-- `harden` with templates for path deny-list, command deny-list, secret-file deny, must-have-test and run-before-commit, as Claude Code hooks, Cursor hooks, rule files or CI test stubs. Prints a diff; writes only with `--write`.
+- `harden` with templates for path deny-list, command deny-list, secret-file deny, must-have-test and run-before-commit, as Claude Code hooks, Cursor hooks, rule files or CI test stubs. Prints a diff; writes only with `--write`. Generated hooks fail closed: if their pattern check itself errors, the action is blocked.
 - Opt-in Kogentic connector: `login`, `logout`, `whoami`, `lint --send-to-kogentic` (off by default, no telemetry, configurable endpoint, local mock server for testing). The connector never follows HTTP redirects: any 3xx answer is an error with exit code 3.
 - Release builds for macOS (arm64, amd64), Linux (amd64, arm64) and Windows (amd64) with SHA-256 checksums, published as GitHub Release assets. Binaries are unsigned in this release.

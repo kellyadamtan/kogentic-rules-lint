@@ -191,7 +191,7 @@ You keep telling the agent the same thing. `harden` turns that sentence into som
 
 `--as rule` writes a scoped rule file (`.claude/rules/<slug>.md` with `paths:`, or `.cursor/rules/<slug>.mdc` with `globs:`) for any correction. Without `--as`, harden picks one.
 
-harden **always prints a diff and writes nothing unless you pass `--write`**. Claude Code hooks go in `.claude/hooks/<slug>.sh` and are registered in `.claude/settings.json` as a `PreToolUse` hook (exit code 2 blocks the call); existing settings are kept. Cursor hooks go in `.cursor/hooks/<slug>.sh` and `.cursor/hooks.json`. Test stubs go in `.kogentic/tests/<slug>.sh`. Generated scripts are plain POSIX `sh`; review them before you commit.
+harden **always prints a diff and writes nothing unless you pass `--write`**. Claude Code hooks go in `.claude/hooks/<slug>.sh` and are registered in `.claude/settings.json` as a `PreToolUse` hook (exit code 2 blocks the call); existing settings are kept. Cursor hooks go in `.cursor/hooks/<slug>.sh` and `.cursor/hooks.json`. Test stubs go in `.kogentic/tests/<slug>.sh`. Generated scripts are plain POSIX `sh`; review them before you commit. Hooks fail closed: if a pattern check itself errors (`grep` exit status above 1), the action is blocked rather than allowed.
 
 ```sh
 kogentic-rules-lint harden "Never edit files in dist/"            # preview
