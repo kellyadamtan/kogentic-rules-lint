@@ -1,0 +1,349 @@
+{
+  "tool": "kogentic-rules-lint",
+  "version": "0.0.0-test",
+  "summary": {
+    "files": 11,
+    "errors": 7,
+    "warnings": 14,
+    "info": 5,
+    "always_on_tokens": 242
+  },
+  "files": [
+    {
+      "path": ".clinerules",
+      "tool": "cline",
+      "kind": "cline",
+      "always_on": true,
+      "tokens": 27
+    },
+    {
+      "path": ".cursor/rules/components.mdc",
+      "tool": "cursor",
+      "kind": "cursor-rule",
+      "always_on": false,
+      "tokens": 59
+    },
+    {
+      "path": ".cursor/rules/notes.mdc",
+      "tool": "cursor",
+      "kind": "cursor-rule",
+      "always_on": false,
+      "tokens": 20
+    },
+    {
+      "path": ".cursor/rules/old-api.mdc",
+      "tool": "cursor",
+      "kind": "cursor-rule",
+      "always_on": false,
+      "tokens": 20
+    },
+    {
+      "path": ".cursor/rules/testing.md",
+      "tool": "cursor",
+      "kind": "cursor-rule-md",
+      "always_on": false,
+      "tokens": 10
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "tool": "copilot",
+      "kind": "copilot-repo",
+      "always_on": true,
+      "tokens": 15
+    },
+    {
+      "path": ".github/instructions/api.instructions.md",
+      "tool": "copilot",
+      "kind": "copilot-instr",
+      "always_on": false,
+      "tokens": 22
+    },
+    {
+      "path": ".windsurf/rules/general.md",
+      "tool": "windsurf",
+      "kind": "windsurf-rule",
+      "always_on": false,
+      "tokens": 19
+    },
+    {
+      "path": "AGENTS.md",
+      "tool": "agents",
+      "kind": "agents",
+      "always_on": true,
+      "tokens": 56
+    },
+    {
+      "path": "CLAUDE.md",
+      "tool": "claude",
+      "kind": "claude-memory",
+      "always_on": true,
+      "tokens": 127
+    },
+    {
+      "path": "docs/style.md",
+      "tool": "claude",
+      "kind": "claude-import",
+      "always_on": true,
+      "tokens": 17,
+      "imported_by": "CLAUDE.md"
+    }
+  ],
+  "findings": [
+    {
+      "rule": "C002",
+      "name": "contradiction",
+      "file": ".clinerules",
+      "line": 3,
+      "message": "\"Never squash commits before merging.\" contradicts .clinerules:2 on always/never (never squash commits before merging vs always squash commits before merging).",
+      "suggestion": "Keep one directive and delete the other, or scope each one to where it applies.",
+      "snippet": "Never squash commits before merging.",
+      "severity": "error"
+    },
+    {
+      "rule": "F006",
+      "name": "unreachable-rule",
+      "file": ".cursor/rules/notes.mdc",
+      "line": 2,
+      "message": "This Cursor rule only loads when someone @-mentions it: no alwaysApply, no globs, no description.",
+      "suggestion": "Add `globs:` to auto-attach it, a `description:` so the agent can pick it, or `alwaysApply: true`.",
+      "severity": "warning"
+    },
+    {
+      "rule": "S004",
+      "name": "glob-matches-nothing",
+      "file": ".cursor/rules/old-api.mdc",
+      "line": 3,
+      "message": "globs pattern \"src/api/**/*.ts\" matches no file in the repo, so this rule never loads.",
+      "suggestion": "Fix the pattern (paths are relative to the repo root) or delete the rule.",
+      "snippet": "src/api/**/*.ts",
+      "severity": "warning"
+    },
+    {
+      "rule": "V001",
+      "name": "vague-instruction",
+      "file": ".cursor/rules/old-api.mdc",
+      "line": 5,
+      "message": "\"Handle errors as needed.\" has no checkable criterion.",
+      "suggestion": "Say what to do and how to check it: \"When <situation>, do <action>; verify by <check>\".",
+      "snippet": "Handle errors as needed.",
+      "severity": "warning"
+    },
+    {
+      "rule": "F001",
+      "name": "mdc-extension",
+      "file": ".cursor/rules/testing.md",
+      "line": 1,
+      "message": "Cursor only loads .mdc files from .cursor/rules/, so this file is ignored.",
+      "suggestion": "Rename it to .cursor/rules/testing.mdc and add frontmatter (description, globs, alwaysApply).",
+      "severity": "error"
+    },
+    {
+      "rule": "V001",
+      "name": "vague-instruction",
+      "file": ".github/copilot-instructions.md",
+      "line": 4,
+      "message": "\"Follow best practices.\" has no checkable criterion.",
+      "suggestion": "Say what to do and how to check it: \"When <situation>, do <action>; verify by <check>\".",
+      "snippet": "Follow best practices.",
+      "severity": "warning"
+    },
+    {
+      "rule": "F004",
+      "name": "missing-applyTo",
+      "file": ".github/instructions/api.instructions.md",
+      "line": 1,
+      "message": "Copilot instructions file has no `applyTo`, so Copilot never applies it automatically.",
+      "suggestion": "Add frontmatter, e.g. `applyTo: \"**/*.ts\"` (or \"**\" for every file).",
+      "severity": "error"
+    },
+    {
+      "rule": "F003",
+      "name": "cross-vendor-frontmatter",
+      "file": ".windsurf/rules/general.md",
+      "line": 1,
+      "message": "Windsurf rule has no `trigger`.",
+      "suggestion": "Add `trigger: always_on`, `manual`, `model_decision` or `glob`.",
+      "severity": "warning"
+    },
+    {
+      "rule": "F003",
+      "name": "cross-vendor-frontmatter",
+      "file": ".windsurf/rules/general.md",
+      "line": 2,
+      "message": "\"alwaysApply\" is a Cursor key; this file's tool ignores it.",
+      "suggestion": "Use this tool's own scoping key (globs) instead.",
+      "snippet": "alwaysApply",
+      "severity": "warning"
+    },
+    {
+      "rule": "C002",
+      "name": "contradiction",
+      "file": "AGENTS.md",
+      "line": 4,
+      "message": "\"Use npm to install packages.\" contradicts .clinerules:1 on package manager (npm vs yarn).",
+      "suggestion": "Keep one directive and delete the other, or scope each one to where it applies.",
+      "snippet": "Use npm to install packages.",
+      "severity": "error"
+    },
+    {
+      "rule": "E001",
+      "name": "should-be-hook",
+      "file": "AGENTS.md",
+      "line": 6,
+      "message": "\"Never commit .env files or other secrets.\" is mechanically checkable (secret-file deny); an agent can still ignore a sentence.",
+      "suggestion": "Enforce it: kogentic-rules-lint harden \"Never commit .env files or other secrets.\" --as hook",
+      "snippet": "Never commit .env files or other secrets.",
+      "severity": "info"
+    },
+    {
+      "rule": "V003",
+      "name": "unbounded-quantifier",
+      "file": "AGENTS.md",
+      "line": 6,
+      "message": "\"Never commit .env files or other secrets.\" says \"never\" with no scope.",
+      "suggestion": "Add a condition or a glob (e.g. \"in `src/**/*.ts`\" or \"when editing migrations\"), or confirm it truly applies everywhere.",
+      "snippet": "Never commit .env files or other secrets.",
+      "severity": "warning"
+    },
+    {
+      "rule": "F005",
+      "name": "dead-reference",
+      "file": "AGENTS.md",
+      "line": 7,
+      "message": "Path `src/utils/helpers.ts` does not exist in the repo.",
+      "suggestion": "Update the path, or remove the reference if the file is gone.",
+      "snippet": "src/utils/helpers.ts",
+      "severity": "warning"
+    },
+    {
+      "rule": "V002",
+      "name": "generic-filler",
+      "file": "CLAUDE.md",
+      "line": 3,
+      "message": "\"You are an expert engineer.\" is generic filler (\"you are an expert\"): agents already do this.",
+      "suggestion": "Delete it, or replace it with a project-specific rule.",
+      "snippet": "You are an expert engineer.",
+      "severity": "info"
+    },
+    {
+      "rule": "V002",
+      "name": "generic-filler",
+      "file": "CLAUDE.md",
+      "line": 3,
+      "message": "\"Be helpful and accurate.\" is generic filler (\"be helpful\"): agents already do this.",
+      "suggestion": "Delete it, or replace it with a project-specific rule.",
+      "snippet": "Be helpful and accurate.",
+      "severity": "info"
+    },
+    {
+      "rule": "V001",
+      "name": "vague-instruction",
+      "file": "CLAUDE.md",
+      "line": 5,
+      "message": "\"Write clean code.\" has no checkable criterion.",
+      "suggestion": "Say what to do and how to check it: \"When <situation>, do <action>; verify by <check>\".",
+      "snippet": "Write clean code.",
+      "severity": "warning"
+    },
+    {
+      "rule": "C003",
+      "name": "drift-between-tools",
+      "file": "CLAUDE.md",
+      "line": 6,
+      "message": "CLAUDE.md and AGENTS.md:3 disagree on indentation (2 spaces vs tabs), so different agents get different rules.",
+      "suggestion": "Keep one source of truth (for example AGENTS.md) and import it from CLAUDE.md with `@AGENTS.md`, or symlink one to the other.",
+      "snippet": "Use 2 spaces for indentation.",
+      "severity": "error"
+    },
+    {
+      "rule": "C002",
+      "name": "contradiction",
+      "file": "CLAUDE.md",
+      "line": 7,
+      "message": "\"Use pnpm for installing packages and running scripts.\" contradicts .clinerules:1 on package manager (pnpm vs yarn).",
+      "suggestion": "Keep one directive and delete the other, or scope each one to where it applies.",
+      "snippet": "Use pnpm for installing packages and running scripts.",
+      "severity": "error"
+    },
+    {
+      "rule": "C003",
+      "name": "drift-between-tools",
+      "file": "CLAUDE.md",
+      "line": 7,
+      "message": "CLAUDE.md and AGENTS.md:4 disagree on package manager (pnpm vs npm), so different agents get different rules.",
+      "suggestion": "Keep one source of truth (for example AGENTS.md) and import it from CLAUDE.md with `@AGENTS.md`, or symlink one to the other.",
+      "snippet": "Use pnpm for installing packages and running scripts.",
+      "severity": "error"
+    },
+    {
+      "rule": "C001",
+      "name": "duplicate",
+      "file": "CLAUDE.md",
+      "line": 8,
+      "message": "\"Run the full test suite before every commit.\" duplicates AGENTS.md:5 (similarity 1.00).",
+      "suggestion": "Keep one copy (AGENTS.md) and delete this one, or import the shared file instead of copying it.",
+      "snippet": "Run the full test suite before every commit.",
+      "severity": "warning"
+    },
+    {
+      "rule": "E001",
+      "name": "should-be-hook",
+      "file": "CLAUDE.md",
+      "line": 9,
+      "message": "\"Never edit files in `dist/`.\" is mechanically checkable (path deny-list); an agent can still ignore a sentence.",
+      "suggestion": "Enforce it: kogentic-rules-lint harden \"Never edit files in `dist/`.\" --as hook",
+      "snippet": "Never edit files in `dist/`.",
+      "severity": "info"
+    },
+    {
+      "rule": "V004",
+      "name": "hedged-rule",
+      "file": "CLAUDE.md",
+      "line": 10,
+      "message": "\"Try to keep functions short.\" is hedged (\"try to\"), so the agent may skip it.",
+      "suggestion": "Decide: make it a hard rule (or a hook, see `harden`), or say plainly that it is optional and when.",
+      "snippet": "Try to keep functions short.",
+      "severity": "warning"
+    },
+    {
+      "rule": "V003",
+      "name": "unbounded-quantifier",
+      "file": "CLAUDE.md",
+      "line": 11,
+      "message": "\"Never use any.\" says \"never\" with no scope.",
+      "suggestion": "Add a condition or a glob (e.g. \"in `src/**/*.ts`\" or \"when editing migrations\"), or confirm it truly applies everywhere.",
+      "snippet": "Never use any.",
+      "severity": "warning"
+    },
+    {
+      "rule": "F005",
+      "name": "dead-reference",
+      "file": "CLAUDE.md",
+      "line": 13,
+      "message": "Import @docs/old-guide.md points to a file that does not exist, so it loads nothing.",
+      "suggestion": "Fix the path (it is relative to CLAUDE.md) or remove the import.",
+      "snippet": "@docs/old-guide.md",
+      "severity": "warning"
+    },
+    {
+      "rule": "S001",
+      "name": "always-on-should-auto-attach",
+      "file": "CLAUDE.md",
+      "line": 15,
+      "message": "Section \"Migrations\" is loaded every session but only refers to migrations (3 references).",
+      "suggestion": "Move this section to .claude/rules/migrations.md with frontmatter `paths: [\"migrations/**\"]`.",
+      "snippet": "Migrations",
+      "severity": "warning"
+    },
+    {
+      "rule": "E001",
+      "name": "should-be-hook",
+      "file": "CLAUDE.md",
+      "line": 18,
+      "message": "\"Never change an applied file in `migrations/`.\" is mechanically checkable (path deny-list); an agent can still ignore a sentence.",
+      "suggestion": "Enforce it: kogentic-rules-lint harden \"Never change an applied file in `migrations/`.\" --as hook",
+      "snippet": "Never change an applied file in `migrations/`.",
+      "severity": "info"
+    }
+  ]
+}

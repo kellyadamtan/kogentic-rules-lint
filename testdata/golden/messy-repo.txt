@@ -1,0 +1,54 @@
+.clinerules:3: error C002 contradiction: "Never squash commits before merging." contradicts .clinerules:2 on always/never (never squash commits before merging vs always squash commits before merging).
+    fix: Keep one directive and delete the other, or scope each one to where it applies.
+.cursor/rules/notes.mdc:2: warning F006 unreachable-rule: This Cursor rule only loads when someone @-mentions it: no alwaysApply, no globs, no description.
+    fix: Add `globs:` to auto-attach it, a `description:` so the agent can pick it, or `alwaysApply: true`.
+.cursor/rules/old-api.mdc:3: warning S004 glob-matches-nothing: globs pattern "src/api/**/*.ts" matches no file in the repo, so this rule never loads.
+    fix: Fix the pattern (paths are relative to the repo root) or delete the rule.
+.cursor/rules/old-api.mdc:5: warning V001 vague-instruction: "Handle errors as needed." has no checkable criterion.
+    fix: Say what to do and how to check it: "When <situation>, do <action>; verify by <check>".
+.cursor/rules/testing.md:1: error F001 mdc-extension: Cursor only loads .mdc files from .cursor/rules/, so this file is ignored.
+    fix: Rename it to .cursor/rules/testing.mdc and add frontmatter (description, globs, alwaysApply).
+.github/copilot-instructions.md:4: warning V001 vague-instruction: "Follow best practices." has no checkable criterion.
+    fix: Say what to do and how to check it: "When <situation>, do <action>; verify by <check>".
+.github/instructions/api.instructions.md:1: error F004 missing-applyTo: Copilot instructions file has no `applyTo`, so Copilot never applies it automatically.
+    fix: Add frontmatter, e.g. `applyTo: "**/*.ts"` (or "**" for every file).
+.windsurf/rules/general.md:1: warning F003 cross-vendor-frontmatter: Windsurf rule has no `trigger`.
+    fix: Add `trigger: always_on`, `manual`, `model_decision` or `glob`.
+.windsurf/rules/general.md:2: warning F003 cross-vendor-frontmatter: "alwaysApply" is a Cursor key; this file's tool ignores it.
+    fix: Use this tool's own scoping key (globs) instead.
+AGENTS.md:4: error C002 contradiction: "Use npm to install packages." contradicts .clinerules:1 on package manager (npm vs yarn).
+    fix: Keep one directive and delete the other, or scope each one to where it applies.
+AGENTS.md:6: info E001 should-be-hook: "Never commit .env files or other secrets." is mechanically checkable (secret-file deny); an agent can still ignore a sentence.
+    fix: Enforce it: kogentic-rules-lint harden "Never commit .env files or other secrets." --as hook
+AGENTS.md:6: warning V003 unbounded-quantifier: "Never commit .env files or other secrets." says "never" with no scope.
+    fix: Add a condition or a glob (e.g. "in `src/**/*.ts`" or "when editing migrations"), or confirm it truly applies everywhere.
+AGENTS.md:7: warning F005 dead-reference: Path `src/utils/helpers.ts` does not exist in the repo.
+    fix: Update the path, or remove the reference if the file is gone.
+CLAUDE.md:3: info V002 generic-filler: "You are an expert engineer." is generic filler ("you are an expert"): agents already do this.
+    fix: Delete it, or replace it with a project-specific rule.
+CLAUDE.md:3: info V002 generic-filler: "Be helpful and accurate." is generic filler ("be helpful"): agents already do this.
+    fix: Delete it, or replace it with a project-specific rule.
+CLAUDE.md:5: warning V001 vague-instruction: "Write clean code." has no checkable criterion.
+    fix: Say what to do and how to check it: "When <situation>, do <action>; verify by <check>".
+CLAUDE.md:6: error C003 drift-between-tools: CLAUDE.md and AGENTS.md:3 disagree on indentation (2 spaces vs tabs), so different agents get different rules.
+    fix: Keep one source of truth (for example AGENTS.md) and import it from CLAUDE.md with `@AGENTS.md`, or symlink one to the other.
+CLAUDE.md:7: error C002 contradiction: "Use pnpm for installing packages and running scripts." contradicts .clinerules:1 on package manager (pnpm vs yarn).
+    fix: Keep one directive and delete the other, or scope each one to where it applies.
+CLAUDE.md:7: error C003 drift-between-tools: CLAUDE.md and AGENTS.md:4 disagree on package manager (pnpm vs npm), so different agents get different rules.
+    fix: Keep one source of truth (for example AGENTS.md) and import it from CLAUDE.md with `@AGENTS.md`, or symlink one to the other.
+CLAUDE.md:8: warning C001 duplicate: "Run the full test suite before every commit." duplicates AGENTS.md:5 (similarity 1.00).
+    fix: Keep one copy (AGENTS.md) and delete this one, or import the shared file instead of copying it.
+CLAUDE.md:9: info E001 should-be-hook: "Never edit files in `dist/`." is mechanically checkable (path deny-list); an agent can still ignore a sentence.
+    fix: Enforce it: kogentic-rules-lint harden "Never edit files in `dist/`." --as hook
+CLAUDE.md:10: warning V004 hedged-rule: "Try to keep functions short." is hedged ("try to"), so the agent may skip it.
+    fix: Decide: make it a hard rule (or a hook, see `harden`), or say plainly that it is optional and when.
+CLAUDE.md:11: warning V003 unbounded-quantifier: "Never use any." says "never" with no scope.
+    fix: Add a condition or a glob (e.g. "in `src/**/*.ts`" or "when editing migrations"), or confirm it truly applies everywhere.
+CLAUDE.md:13: warning F005 dead-reference: Import @docs/old-guide.md points to a file that does not exist, so it loads nothing.
+    fix: Fix the path (it is relative to CLAUDE.md) or remove the import.
+CLAUDE.md:15: warning S001 always-on-should-auto-attach: Section "Migrations" is loaded every session but only refers to migrations (3 references).
+    fix: Move this section to .claude/rules/migrations.md with frontmatter `paths: ["migrations/**"]`.
+CLAUDE.md:18: info E001 should-be-hook: "Never change an applied file in `migrations/`." is mechanically checkable (path deny-list); an agent can still ignore a sentence.
+    fix: Enforce it: kogentic-rules-lint harden "Never change an applied file in `migrations/`." --as hook
+
+7 errors, 14 warnings, 5 info in 11 rules files (always-on: ~242 tokens)

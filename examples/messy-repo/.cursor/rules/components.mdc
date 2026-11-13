@@ -1,0 +1,7 @@
+---
+description: React component conventions
+globs: src/components/**/*.tsx
+alwaysApply: false
+---
+- Put each component in its own file under `src/components/`.
+- Export components as named exports, e.g. `export function UserCard()`.

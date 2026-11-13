@@ -1,0 +1,5 @@
+---
+alwaysApply: false
+globs: src/api/**/*.ts
+---
+- Handle errors as needed.
