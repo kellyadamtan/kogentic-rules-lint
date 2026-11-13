@@ -16,5 +16,5 @@ All notable changes to this project are documented here. The format follows
 - `.kogentic-rules-lint.yaml` config and inline `rules-lint-disable` comments.
 - `explain`, `init`, `version`.
 - `harden` with templates for path deny-list, command deny-list, secret-file deny, must-have-test and run-before-commit, as Claude Code hooks, Cursor hooks, rule files or CI test stubs. Prints a diff; writes only with `--write`.
-- Opt-in Kogentic connector: `login`, `logout`, `whoami`, `lint --send-to-kogentic` (off by default, no telemetry, configurable endpoint, local mock server for testing).
+- Opt-in Kogentic connector: `login`, `logout`, `whoami`, `lint --send-to-kogentic` (off by default, no telemetry, configurable endpoint, local mock server for testing). The connector never follows HTTP redirects: any 3xx answer is an error with exit code 3.
 - Release builds for macOS (arm64, amd64), Linux (amd64, arm64) and Windows (amd64) with SHA-256 checksums, published as GitHub Release assets. Binaries are unsigned in this release.

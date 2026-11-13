@@ -58,6 +58,11 @@ func usageErr(format string, a ...any) error {
 
 func runtimeErr(err error) error { return &exitError{ExitRuntime, err} }
 
+// newClient builds the Kogentic client. Tests replace it only to trust a
+// local test TLS certificate; the redirect policy always comes from
+// connector.NewClient.
+var newClient = connector.NewClient
+
 // isTerminal is replaceable in tests.
 var isTerminal = func(r io.Reader) bool {
 	if f, ok := r.(*os.File); ok {
@@ -242,7 +247,7 @@ func (a *app) send(res *engine.Result, root, base, key string, o *lintOpts) erro
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	resp, err := connector.NewClient(base, key).SendReport(ctx, rep)
+	resp, err := newClient(base, key).SendReport(ctx, rep)
 	if err != nil {
 		return runtimeErr(fmt.Errorf("send to Kogentic failed: %w", err))
 	}
@@ -390,7 +395,7 @@ func (a *app) loginCmd() *cobra.Command {
 			}
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
-			me, err := connector.NewClient(base, key).Me(ctx)
+			me, err := newClient(base, key).Me(ctx)
 			if err != nil {
 				return runtimeErr(fmt.Errorf("key check failed: %w", err))
 			}
@@ -449,7 +454,7 @@ func (a *app) whoamiCmd() *cobra.Command {
 			}
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
-			me, err := connector.NewClient(base, key).Me(ctx)
+			me, err := newClient(base, key).Me(ctx)
 			if err != nil {
 				return runtimeErr(err)
 			}

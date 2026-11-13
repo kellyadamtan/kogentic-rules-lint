@@ -224,7 +224,7 @@ For code scanning, run with `--format sarif > rules-lint.sarif` and upload it wi
 `--send-to-kogentic` uploads the findings **report** only: rule IDs, severities, file paths, line numbers, short snippets (at most 200 characters; `--redact-snippets` removes them), the repo folder name, a SHA-256 hash of the `origin` remote URL, the commit SHA, and the summary counts. It **never sends file contents**. Before uploading it prints exactly what will be sent and asks `y/N` (use `--yes` in CI).
 
 - API key: `kogentic-rules-lint login` stores it in your OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service), or set `KOGENTIC_API_KEY` (the environment variable wins). Keys are shown masked (`kg_…abcd`) and never written to config files or logs. `logout` removes it.
-- Endpoint: there is **no built-in default**. Set `--kogentic-url` or `KOGENTIC_BASE_URL`. Plain `http://` is only allowed for `localhost`.
+- Endpoint: there is **no built-in default**. Set `--kogentic-url` or `KOGENTIC_BASE_URL`. Plain `http://` is only allowed for `localhost`. Redirects are never followed: if the server answers with any 3xx, nothing is sent onward and the command exits 3.
 - The Kogentic API is not public yet. To try the flow, run the local mock: `go run ./tools/mock-kogentic` (see [docs/connector.md](docs/connector.md)).
 
 ## Contributing

@@ -18,6 +18,7 @@ There is no telemetry, no phone-home and no update check.
 - The key is stored in the OS keychain under service `kogentic`, account `default` (macOS Keychain, Windows Credential Manager, Linux Secret Service). `KOGENTIC_API_KEY` overrides it, which is handy in CI.
 - Keys are printed masked (`kg_…abcd`) and never written to config files or logs.
 - `https://` is required, except `http://localhost` / loopback addresses for local testing.
+- Redirects are never followed. Any 3xx answer (to login, whoami or the upload) is an error with exit code 3, so the key and the report only ever go to the configured URL.
 
 ## What `--send-to-kogentic` sends
 

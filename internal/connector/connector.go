@@ -118,10 +118,20 @@ type Client struct {
 	HTTP    *http.Client
 }
 
-// NewClient builds a client with a short timeout.
+// NewClient builds a client with a short timeout that never follows
+// redirects. A redirect could move the request to plain http, another port or
+// another host, and Go would resend the Authorization header and the report
+// body there. The API has no reason to redirect, so any 3xx is an error.
 func NewClient(base, key string) *Client {
-	return &Client{BaseURL: base, Key: key, HTTP: &http.Client{Timeout: 20 * time.Second}}
+	return &Client{BaseURL: base, Key: key, HTTP: &http.Client{
+		Timeout:       20 * time.Second,
+		CheckRedirect: noRedirects,
+	}}
 }
+
+// noRedirects stops the client at the first response, so a 3xx is returned
+// to do() unfollowed.
+func noRedirects(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
 
 // Me is the GET /v1/me response.
 type Me struct {
@@ -162,6 +172,9 @@ func (c *Client) do(ctx context.Context, method, p string, body any, out any) er
 	data, _ := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
 	if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
 		return fmt.Errorf("%s %s: the API key was rejected (HTTP %d)", method, p, resp.StatusCode)
+	}
+	if resp.StatusCode >= 300 && resp.StatusCode <= 399 {
+		return fmt.Errorf("%s %s: the server answered with a redirect (HTTP %d); redirects are never followed, so nothing was sent onward. Check the Kogentic base URL", method, p, resp.StatusCode)
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return fmt.Errorf("%s %s: HTTP %d", method, p, resp.StatusCode)
