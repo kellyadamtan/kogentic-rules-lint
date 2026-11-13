@@ -1,2 +1,5 @@
 - Prefer descriptive names.
 - Explain the why in commit messages.
+- Update `CHANGELOG.md` with every user-facing change.
+- Edit files in `src/` freely.
+- Read the credentials section in `docs/setup.md` when you set up a machine.

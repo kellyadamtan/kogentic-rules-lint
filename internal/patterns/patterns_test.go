@@ -24,6 +24,8 @@ func TestClassify(t *testing.T) {
 		{"Write clean code.", None, nil, nil},
 		{"Never use any.", None, nil, nil},
 		{"Run tests before committing.", None, nil, nil},
+		{"Update `CHANGELOG.md` with every change.", None, nil, nil},
+		{"Read the credentials section of the setup guide.", None, nil, nil},
 	}
 	for _, c := range cases {
 		p := Classify(c.text)
