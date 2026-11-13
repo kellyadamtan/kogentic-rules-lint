@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+
+	"github.com/kellyadamtan/kogentic-rules-lint/internal/mockkogentic"
 )
 
 // skipNoPerms skips tests that rely on chmod making a file unreadable.
@@ -93,9 +95,18 @@ func TestUnreadableFileBlocksSend(t *testing.T) {
 	root := tmpRepo(t, map[string]string{"AGENTS.md": "- Write clean code.\n", "GEMINI.md": "x\n"})
 	chmod(t, filepath.Join(root, "GEMINI.md"), 0)
 	t.Setenv("KOGENTIC_API_KEY", testKey)
-	// The URL is never contacted: the run stops before sending.
-	code, _, errs := run(t, "", "lint", "--send-to-kogentic", "--yes", "--kogentic-url", "http://127.0.0.1:4839", root)
+	sink := &mockkogentic.Recorder{}
+	srv := startServer(t, sink, false)
+	code, _, errs := run(t, "", "lint", "--send-to-kogentic", "--yes", "--kogentic-url", srv.URL, root)
 	if code != 3 || !strings.Contains(errs, "Not sent") {
 		t.Fatalf("exit %d\n%s", code, errs)
+	}
+	if n := sink.Count(); n != 0 {
+		t.Fatalf("an incomplete report must not be uploaded: server got %d request(s)", n)
+	}
+	// Control: once the file is readable the same command does upload.
+	chmod(t, filepath.Join(root, "GEMINI.md"), 0o644)
+	if code, _, errs := run(t, "", "lint", "--send-to-kogentic", "--yes", "--kogentic-url", srv.URL, root); code != 0 || sink.Count() != 1 {
+		t.Fatalf("readable repo should send: exit %d, requests %d\n%s", code, sink.Count(), errs)
 	}
 }
