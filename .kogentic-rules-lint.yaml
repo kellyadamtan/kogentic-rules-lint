@@ -1,0 +1,7 @@
+# Config used when this repo lints itself (CI dogfood).
+version: 1
+paths:
+  # Fixtures and examples contain planted problems on purpose.
+  ignore:
+    - "testdata/**"
+    - "examples/**"
