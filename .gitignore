@@ -1,0 +1,7 @@
+/dist/
+/kogentic-rules-lint
+/kogentic-rules-lint.exe
+*.test
+*.out
+coverage.*
+.DS_Store
