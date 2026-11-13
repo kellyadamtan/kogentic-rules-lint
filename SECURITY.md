@@ -13,4 +13,4 @@ Useful details: the version (`kogentic-rules-lint version`), your OS, and steps 
 - The linter reads files and writes only when you run `init` or `harden --write`.
 - `harden` generates shell scripts from your correction text. Review generated hooks before committing them.
 - The optional connector sends data only with `--send-to-kogentic`, `login` or `whoami`, refuses plain `http://` except for localhost, and stores the API key in the OS keychain.
-- v0.1 release binaries are unsigned. Always verify downloads against `checksums.txt`.
+- v0.1 release binaries are not code-signed for macOS or Windows. Always verify downloads against `checksums.txt`, and check build provenance with `gh attestation verify <file> --repo kellyadamtan/kogentic-rules-lint`. Each archive ships with an SPDX SBOM.

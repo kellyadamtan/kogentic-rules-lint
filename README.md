@@ -37,7 +37,7 @@ Try it on the sample repo in [`examples/messy-repo`](examples/messy-repo).
 
 ## Install
 
-Download a binary from [GitHub Releases](https://github.com/kellyadamtan/kogentic-rules-lint/releases). Each release has archives for macOS (Apple Silicon and Intel), Linux (x86-64 and arm64) and Windows (x86-64), plus `checksums.txt` (SHA-256).
+Download a binary from [GitHub Releases](https://github.com/kellyadamtan/kogentic-rules-lint/releases). Each release has archives for macOS (Apple Silicon and Intel), Linux (x86-64 and arm64) and Windows (x86-64), plus an SPDX SBOM for each archive (`<archive>.sbom.json`) and `checksums.txt` (SHA-256).
 
 macOS / Linux:
 
@@ -67,11 +67,22 @@ Invoke-WebRequest "$Base/checksums.txt" -OutFile checksums.txt
 
 # Compare with the matching line in checksums.txt
 (Get-FileHash krl.zip -Algorithm SHA256).Hash.ToLower()
-Select-String "windows_amd64.zip" checksums.txt
+Select-String "windows_amd64\.zip$" checksums.txt
 
 Expand-Archive krl.zip -DestinationPath .
 .\kogentic-rules-lint.exe version
 ```
+
+### Verify build provenance and read the SBOM
+
+Every release is built by GitHub Actions from a tagged commit. The workflow records a keyless [build provenance attestation](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations) for each archive and for `checksums.txt` (GitHub OIDC; no signing keys or secrets involved). With the [GitHub CLI](https://cli.github.com/):
+
+```sh
+gh attestation verify "kogentic-rules-lint_${VERSION}_${OS}_${ARCH}.tar.gz" --repo kellyadamtan/kogentic-rules-lint
+gh attestation verify checksums.txt --repo kellyadamtan/kogentic-rules-lint
+```
+
+This proves the file was built by this repository's release workflow; it is not the same as OS code signing (see below). Each archive also has an SPDX JSON SBOM made with [syft](https://github.com/anchore/syft), shipped as a Release asset next to it and listed in `checksums.txt`, so you can see exactly which Go modules are inside.
 
 ### Unsigned binaries (macOS and Windows)
 

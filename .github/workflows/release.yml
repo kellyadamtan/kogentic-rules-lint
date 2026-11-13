@@ -1,7 +1,10 @@
 name: release
 
 # Runs only when a version tag (v1.2.3) is pushed. Publishes GitHub Release
-# assets only: 5 archives and checksums.txt. Unsigned in v0.1.
+# assets only: 5 archives, an SPDX SBOM per archive and checksums.txt, then
+# records keyless build provenance attestations for the archives and
+# checksums.txt (GitHub OIDC; no signing keys or secrets). Binaries are not
+# code-signed in v0.1.
 on:
   push:
     tags:
@@ -32,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # create the GitHub Release and upload assets
+      id-token: write # OIDC token for keyless provenance attestations
+      attestations: write # store the attestations
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -40,10 +45,19 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
+      - uses: anchore/sbom-action/download-syft@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        with:
+          syft-version: v1.57.1
       - uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7.3.0
         with:
           distribution: goreleaser
-          version: "~> v2"
+          version: v2.20.2
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/checksums.txt

@@ -1,7 +1,9 @@
 # GoReleaser config for kogentic-rules-lint.
-# Release assets only: archives for 5 targets plus checksums.txt (SHA-256).
-# v0.1 ships unsigned binaries: no signing, no notarization, no package
-# managers (no Homebrew, Scoop, npm).
+# Release assets only: archives for 5 targets, an SPDX SBOM per archive
+# (made with syft) and checksums.txt (SHA-256). The release workflow adds
+# keyless GitHub build provenance attestations. Binaries are not code-signed:
+# no Apple/Windows signing, no notarization, no package managers (no
+# Homebrew, Scoop, npm).
 version: 2
 
 project_name: kogentic-rules-lint
@@ -44,6 +46,14 @@ checksum:
   name_template: checksums.txt
   algorithm: sha256
 
+# One SPDX JSON SBOM per archive, uploaded as a Release asset. Needs syft on
+# PATH (the workflows install a pinned version).
+sboms:
+  - id: archives
+    artifacts: archive
+    documents:
+      - "{{ .ArtifactName }}.sbom.json"
+
 snapshot:
   version_template: "{{ incpatch .Version }}-snapshot+{{ .ShortCommit }}"
 
@@ -64,3 +74,5 @@ release:
   footer: |
     Binaries are not code-signed in v0.1. See the README section
     "Unsigned binaries (macOS and Windows)" and verify downloads with checksums.txt.
+    Each archive has an SPDX SBOM (*.sbom.json), and the archives and checksums.txt
+    have GitHub build provenance: gh attestation verify <file> --repo kellyadamtan/kogentic-rules-lint
