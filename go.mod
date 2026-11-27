@@ -3,7 +3,7 @@ module github.com/kellyadamtan/kogentic-rules-lint
 go 1.26.0
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.10.4
+	github.com/bmatcuk/doublestar/v4 v4.10.7
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06
 	github.com/spf13/cobra v1.10.2
 	github.com/zalando/go-keyring v0.2.8
